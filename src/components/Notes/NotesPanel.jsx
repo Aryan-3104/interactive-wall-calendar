@@ -1,19 +1,24 @@
-import { useEffect, useState } from "react";
-import { formatYearMonth } from "../../utils/dateHelpers";
+import { useState } from "react";
+import { formatDateKey } from "../../utils/dateHelpers";
 
-export function NotesPanel({ currentMonth }) {
-  const [notes, setNotes] = useState("");
+export function NotesPanel({ selectedDate }) {
   const [saveStatus, setSaveStatus] = useState("");
-  const monthName = currentMonth.toLocaleString("default", { month: "long" }).toUpperCase();
-  const storageKey = `notes-${formatYearMonth(currentMonth)}`;
-
-  useEffect(() => {
-    const savedNotes = localStorage.getItem(storageKey) || "";
-    setNotes(savedNotes);
-    setSaveStatus("");
-  }, [storageKey]);
+  const hasSelectedDate = Boolean(selectedDate);
+  const storageKey = hasSelectedDate ? `notes-${formatDateKey(selectedDate)}` : null;
+  const [notes, setNotes] = useState(() => (
+    storageKey ? localStorage.getItem(storageKey) || "" : ""
+  ));
+  const headerLabel = hasSelectedDate
+    ? selectedDate.toLocaleDateString("default", {
+      month: "short",
+      day: "numeric",
+      year: "numeric",
+    }).toUpperCase()
+    : "SELECT A DATE";
 
   const handleNotesChange = (e) => {
+    if (!storageKey) return;
+
     const newNotes = e.target.value;
     setNotes(newNotes);
     localStorage.setItem(storageKey, newNotes);
@@ -47,7 +52,7 @@ export function NotesPanel({ currentMonth }) {
             margin: 0,
             fontFamily: 'var(--font-body)'
           }}>
-            {monthName} NOTES
+            {headerLabel} NOTES
           </h3>
           {saveStatus && (
             <span style={{
@@ -67,7 +72,8 @@ export function NotesPanel({ currentMonth }) {
       <textarea
         value={notes}
         onChange={handleNotesChange}
-        placeholder="Notes..."
+        placeholder={hasSelectedDate ? "Notes..." : "Click a date to add notes..."}
+        disabled={!hasSelectedDate}
         style={{
           flex: 1,
           width: '100%',
@@ -91,7 +97,9 @@ export function NotesPanel({ currentMonth }) {
           backgroundPosition: "0 4px",
           backgroundSize: "100% 22px",
           lineHeight: "22px",
-          backgroundAttachment: "local"
+          backgroundAttachment: "local",
+          opacity: hasSelectedDate ? 1 : 0.6,
+          cursor: hasSelectedDate ? "text" : "not-allowed"
         }}
       />
     </div>

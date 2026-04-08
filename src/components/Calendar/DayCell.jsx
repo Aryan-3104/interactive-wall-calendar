@@ -2,9 +2,7 @@ export function DayCell({
   date,
   isCurrentMonth,
   isToday,
-  isRangeStart,
-  isRangeEnd,
-  isInRange,
+  isSelected,
   columnIndex,
   dayIndex,
   onDayClick,
@@ -15,7 +13,7 @@ export function DayCell({
 
   const getTextColor = () => {
     if (!isCurrentMonth) return '#ccc';
-    if (isToday || isRangeStart || isRangeEnd) return 'white';
+    if (isToday || isSelected) return 'white';
     if (isSaturday) return '#d45d5d';
     if (isSunday) return '#3b9fd8';
     return '#333';
@@ -23,12 +21,11 @@ export function DayCell({
 
   const getBackgroundStyle = () => {
     if (isToday) return 'linear-gradient(135deg, #3b9fd8, #2d8bc9)';
-    if (isRangeStart || isRangeEnd) return 'linear-gradient(135deg, #c2956b, #a67b55)';
-    if (isInRange) return 'rgba(59, 159, 216, 0.08)';
+    if (isSelected) return 'linear-gradient(135deg, #c2956b, #a67b55)';
     return 'transparent';
   };
 
-  const isHighlighted = isToday || isRangeStart || isRangeEnd;
+  const isHighlighted = isToday || isSelected;
 
   const row = Math.floor(dayIndex / 7);
   const col = dayIndex % 7;
@@ -68,7 +65,7 @@ export function DayCell({
         }
       }}
       onMouseLeave={(e) => {
-        if (!isHighlighted && !isInRange) {
+        if (!isHighlighted) {
           e.currentTarget.style.backgroundColor = 'transparent';
         }
         e.currentTarget.style.transform = 'scale(1)';

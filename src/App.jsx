@@ -5,6 +5,21 @@ import { HeroImage } from "./components/HeroImage/HeroImage";
 import { NotesPanel } from "./components/Notes/NotesPanel";
 import "./App.css";
 
+const MONTH_THEMES = [
+  { wallA: "#6f7f8f", wallB: "#485868", wallC: "#2e3946", card: "#f8fbff", accent: "#7bb0d9" }, // Jan
+  { wallA: "#8a96a3", wallB: "#616f7e", wallC: "#3e4b58", card: "#f8fbff", accent: "#9ab9d7" }, // Feb
+  { wallA: "#8da67b", wallB: "#5f7d57", wallC: "#3e5a3f", card: "#f9fff7", accent: "#7dbb6f" }, // Mar
+  { wallA: "#8aa7c5", wallB: "#5b7ea1", wallC: "#3d5f82", card: "#f7fbff", accent: "#6ca4d8" }, // Apr
+  { wallA: "#90b78a", wallB: "#5f8f59", wallC: "#3f6c3e", card: "#f8fff6", accent: "#79b26f" }, // May
+  { wallA: "#8fc3c8", wallB: "#5b9da6", wallC: "#3c7480", card: "#f4feff", accent: "#57a8c3" }, // Jun
+  { wallA: "#d2a06f", wallB: "#a77245", wallC: "#704c2d", card: "#fff9f3", accent: "#c9884e" }, // Jul
+  { wallA: "#7ea6b7", wallB: "#567f91", wallC: "#375b6b", card: "#f5fbff", accent: "#5f98b5" }, // Aug
+  { wallA: "#b78e62", wallB: "#8b653f", wallC: "#5f4428", card: "#fff8f1", accent: "#bb7e43" }, // Sep
+  { wallA: "#b36f4e", wallB: "#874f35", wallC: "#5c3423", card: "#fff6f1", accent: "#c0673f" }, // Oct
+  { wallA: "#8f8f8a", wallB: "#676763", wallC: "#454542", card: "#fcfcfb", accent: "#8b9aa1" }, // Nov
+  { wallA: "#7f8f9f", wallB: "#5a6d7e", wallC: "#3a4a57", card: "#f7fbff", accent: "#7ea7d1" }, // Dec
+];
+
 function App() {
   const calendar = useCalendar();
 
@@ -15,13 +30,14 @@ function App() {
     : '';
 
   const monthIndex = calendar.currentMonth.getMonth();
+  const theme = MONTH_THEMES[monthIndex];
 
   return (
     <div style={{
       height: '100vh',
       overflow: 'hidden',
       background: `
-        radial-gradient(ellipse at 50% 30%, #5a5a5a, #3a3a3a 50%, #2a2a2a 100%)
+        radial-gradient(ellipse at 50% 30%, ${theme.wallA}, ${theme.wallB} 50%, ${theme.wallC} 100%)
       `,
       display: 'flex',
       alignItems: 'center',
@@ -64,6 +80,49 @@ function App() {
         }} />
       </div>
 
+      {/* Hanging strings */}
+      <div
+        style={{
+          position: "absolute",
+          top: "calc(50% - 315px)",
+          left: "50%",
+          transform: "translateX(-50%)",
+          width: "560px",
+          height: "80px",
+          zIndex: 1,
+          pointerEvents: "none",
+        }}
+      >
+        <div
+          style={{
+            position: "absolute",
+            top: "0px",
+            left: "280px",
+            width: "155px",
+            height: "2px",
+            borderRadius: "2px",
+            transformOrigin: "left center",
+            transform: "rotate(31deg)",
+            background: "linear-gradient(to bottom, #cbc5bc, #9f988f 60%, #868077)",
+            boxShadow: "0 1px 1px rgba(0,0,0,0.25)",
+          }}
+        />
+        <div
+          style={{
+            position: "absolute",
+            top: "0px",
+            right: "280px",
+            width: "155px",
+            height: "2px",
+            borderRadius: "2px",
+            transformOrigin: "right center",
+            transform: "rotate(-31deg)",
+            background: "linear-gradient(to bottom, #cbc5bc, #9f988f 60%, #868077)",
+            boxShadow: "0 1px 1px rgba(0,0,0,0.25)",
+          }}
+        />
+      </div>
+
       {/* Main calendar wrapper — holds card + outside nav arrows */}
       <div style={{
         position: 'relative',
@@ -77,10 +136,10 @@ function App() {
           onClick={calendar.goToPrevMonth}
           style={{
             width: '46px', height: '46px', borderRadius: '50%',
-            background: 'rgba(255,255,255,0.12)',
+            background: 'color-mix(in srgb, white 14%, transparent)',
             backdropFilter: 'blur(8px)',
-            border: '1px solid rgba(255,255,255,0.15)',
-            color: 'rgba(255,255,255,0.7)',
+            border: `1px solid color-mix(in srgb, ${theme.accent} 30%, white 35%)`,
+            color: 'rgba(255,255,255,0.88)',
             cursor: 'pointer',
             display: 'flex', alignItems: 'center', justifyContent: 'center',
             transition: 'all 250ms cubic-bezier(0.22,1,0.36,1)',
@@ -88,14 +147,14 @@ function App() {
             flexShrink: 0
           }}
           onMouseEnter={(e) => {
-            e.currentTarget.style.background = 'rgba(255,255,255,0.25)';
+            e.currentTarget.style.background = `color-mix(in srgb, ${theme.accent} 45%, white 25%)`;
             e.currentTarget.style.transform = 'scale(1.1)';
             e.currentTarget.style.color = 'white';
           }}
           onMouseLeave={(e) => {
-            e.currentTarget.style.background = 'rgba(255,255,255,0.12)';
+            e.currentTarget.style.background = 'color-mix(in srgb, white 14%, transparent)';
             e.currentTarget.style.transform = 'scale(1)';
-            e.currentTarget.style.color = 'rgba(255,255,255,0.7)';
+            e.currentTarget.style.color = 'rgba(255,255,255,0.88)';
           }}
           aria-label="Previous month"
         >
@@ -110,14 +169,24 @@ function App() {
             className={`calendar-card ${flipClass}`}
             style={{
               width: '560px',
-              backgroundColor: 'white',
+              backgroundColor: theme.card,
               borderRadius: '6px',
               overflow: 'hidden',
-              boxShadow: '0 20px 60px rgba(0,0,0,0.35), 0 8px 20px rgba(0,0,0,0.2)',
+              border: `1px solid color-mix(in srgb, ${theme.accent} 18%, #fff 72%)`,
+              boxShadow: '0 24px 70px rgba(0,0,0,0.32), 0 10px 26px rgba(0,0,0,0.18)',
               display: 'flex',
               flexDirection: 'column'
             }}
           >
+            <div
+              style={{
+                position: "absolute",
+                inset: 0,
+                pointerEvents: "none",
+                background: "linear-gradient(to bottom right, rgba(255,255,255,0.28), transparent 40%)",
+                zIndex: 3,
+              }}
+            />
             {/* Paper shadow overlay — darkens page surface during flip */}
             <div className="paper-shadow-overlay" />
             {/* Spiral binding */}
@@ -138,7 +207,10 @@ function App() {
                 borderRight: '1px solid #e8e5e0',
                 flexShrink: 0
               }}>
-                <NotesPanel currentMonth={calendar.currentMonth} />
+                <NotesPanel
+                  key={calendar.selectedDate ? calendar.selectedDate.toISOString() : "no-date"}
+                  selectedDate={calendar.selectedDate}
+                />
               </div>
 
               {/* Calendar grid */}
@@ -147,9 +219,7 @@ function App() {
                   calendarDays={calendar.calendarDays}
                   isCurrentMonth={calendar.isCurrentMonth}
                   isToday={calendar.isToday}
-                  isRangeStart={calendar.isRangeStart}
-                  isRangeEnd={calendar.isRangeEnd}
-                  isInRange={calendar.isInRange}
+                  isSelected={calendar.isSelected}
                   onDayClick={calendar.handleDayClick}
                 />
               </div>
@@ -165,10 +235,10 @@ function App() {
           onClick={calendar.goToNextMonth}
           style={{
             width: '46px', height: '46px', borderRadius: '50%',
-            background: 'rgba(255,255,255,0.12)',
+            background: 'color-mix(in srgb, white 14%, transparent)',
             backdropFilter: 'blur(8px)',
-            border: '1px solid rgba(255,255,255,0.15)',
-            color: 'rgba(255,255,255,0.7)',
+            border: `1px solid color-mix(in srgb, ${theme.accent} 30%, white 35%)`,
+            color: 'rgba(255,255,255,0.88)',
             cursor: 'pointer',
             display: 'flex', alignItems: 'center', justifyContent: 'center',
             transition: 'all 250ms cubic-bezier(0.22,1,0.36,1)',
@@ -176,14 +246,14 @@ function App() {
             flexShrink: 0
           }}
           onMouseEnter={(e) => {
-            e.currentTarget.style.background = 'rgba(255,255,255,0.25)';
+            e.currentTarget.style.background = `color-mix(in srgb, ${theme.accent} 45%, white 25%)`;
             e.currentTarget.style.transform = 'scale(1.1)';
             e.currentTarget.style.color = 'white';
           }}
           onMouseLeave={(e) => {
-            e.currentTarget.style.background = 'rgba(255,255,255,0.12)';
+            e.currentTarget.style.background = 'color-mix(in srgb, white 14%, transparent)';
             e.currentTarget.style.transform = 'scale(1)';
-            e.currentTarget.style.color = 'rgba(255,255,255,0.7)';
+            e.currentTarget.style.color = 'rgba(255,255,255,0.88)';
           }}
           aria-label="Next month"
         >
@@ -210,7 +280,7 @@ function App() {
               width: i === monthIndex ? '20px' : '7px',
               height: '7px',
               borderRadius: '4px',
-              backgroundColor: i === monthIndex ? '#3b9fd8' : 'rgba(255,255,255,0.25)',
+              backgroundColor: i === monthIndex ? theme.accent : 'rgba(255,255,255,0.25)',
               transition: 'all 350ms cubic-bezier(0.22,1,0.36,1)'
             }}
           />

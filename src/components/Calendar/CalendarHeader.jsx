@@ -1,20 +1,21 @@
 export function CalendarHeader() {
-  const spiralRings = Array.from({ length: 20 });
+  const spiralRings = Array.from({ length: 22 });
 
   return (
     <div style={{
-      background: 'linear-gradient(to bottom, #f0ece6, #faf8f5)',
-      borderBottom: '1px solid #e0dcd5',
-      padding: '5px 12px',
-      position: 'relative'
+      background: 'linear-gradient(to bottom, #ece7e0, #f9f6f1)',
+      borderBottom: '1px solid #ddd6cc',
+      padding: '8px 12px 7px 12px',
+      position: 'relative',
+      overflow: 'hidden'
     }}>
       {/* Cast shadow below spirals */}
       <div style={{
         position: 'absolute',
-        bottom: '-3px',
+        bottom: '-2px',
         left: '8%', right: '8%',
-        height: '3px',
-        background: 'linear-gradient(to bottom, rgba(0,0,0,0.04), transparent)',
+        height: '4px',
+        background: 'linear-gradient(to bottom, rgba(0,0,0,0.06), transparent)',
         borderRadius: '0 0 50% 50%',
         pointerEvents: 'none'
       }} />
@@ -23,26 +24,49 @@ export function CalendarHeader() {
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'center',
-        gap: '3px'
+        gap: '4px',
+        position: "relative",
+        zIndex: 2,
       }}>
         {spiralRings.map((_, index) => (
           <div
             key={index}
             style={{
-              width: '14px', height: '14px', borderRadius: '50%',
-              background: 'radial-gradient(circle at 35% 30%, #ddd8d0, #b5aea5 45%, #9a948c 75%, #b0aaa2)',
-              border: '1px solid rgba(140,134,126,0.4)',
-              boxShadow: 'inset 0 1px 1px rgba(255,255,255,0.45), inset 0 -1px 1px rgba(0,0,0,0.1), 0 1px 2px rgba(0,0,0,0.08)',
-              position: 'relative', flexShrink: 0
+              width: "13px",
+              height: "11px",
+              borderTop: "2px solid #98928b",
+              borderLeft: "2px solid #98928b",
+              borderRight: "2px solid #98928b",
+              borderBottom: "none",
+              borderTopLeftRadius: "12px",
+              borderTopRightRadius: "12px",
+              boxShadow: "inset 0 1px 0 rgba(255,255,255,0.55), 0 1px 1px rgba(0,0,0,0.14)",
+              position: "relative",
+              flexShrink: 0,
+              background: "linear-gradient(to bottom, rgba(255,255,255,0.26), rgba(255,255,255,0.03))",
             }}
           >
+            {/* subtle metallic shine across each loop */}
+            <div
+              style={{
+                position: "absolute",
+                top: "1px",
+                left: "1px",
+                right: "1px",
+                height: "2px",
+                borderRadius: "2px",
+                background: "rgba(255,255,255,0.35)",
+              }}
+            />
             <div style={{
-              position: 'absolute', top: '50%', left: '50%',
-              transform: 'translate(-50%, -50%)',
-              width: '4px', height: '4px', borderRadius: '50%',
-              background: 'linear-gradient(to bottom, #e8e4de, #d5d0c8)',
-              border: '0.5px solid rgba(140,134,126,0.3)',
-              boxShadow: 'inset 0 0.5px 1px rgba(0,0,0,0.08)'
+              position: "absolute",
+              left: "50%",
+              top: "10px",
+              transform: "translateX(-50%)",
+              width: "2px",
+              height: "5px",
+              background: "linear-gradient(to bottom, #a8a39a, #8d8780)",
+              borderRadius: "2px",
             }} />
           </div>
         ))}

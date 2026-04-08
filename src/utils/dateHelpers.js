@@ -98,6 +98,15 @@ export function formatYearMonth(date) {
 }
 
 /**
+ * Format date as "YYYY-MM-DD"
+ * @param {Date} date
+ * @returns {string}
+ */
+export function formatDateKey(date) {
+  return format(date, "yyyy-MM-dd");
+}
+
+/**
  * Format date as "MMMM yyyy" (e.g., "January 2026")
  * @param {Date} date
  * @returns {string}
