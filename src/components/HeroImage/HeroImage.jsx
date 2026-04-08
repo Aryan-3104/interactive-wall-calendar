@@ -2,16 +2,16 @@ import { formatMonthYear } from "../../utils/dateHelpers";
 import { useState, useEffect, useRef } from "react";
 
 const MONTH_IMAGES = [
-  "https://images.unsplash.com/photo-1483921020237-2ff51e8e4b22?w=1200&h=800&fit=crop",  // Jan — snowy forest
-  "https://images.unsplash.com/photo-1457269449834-928af64c684d?w=1200&h=800&fit=crop",  // Feb — winter trees
-  "https://images.unsplash.com/photo-1462275646964-a0e3386b89fa?w=1200&h=800&fit=crop",  // Mar — wildflowers
-  "https://images.unsplash.com/photo-1508739773434-c26b3d09e071?w=1200&h=800&fit=crop",  // Apr — sunrise sky
-  "https://images.unsplash.com/photo-1501854140801-50d01698950b?w=1200&h=800&fit=crop",  // May — green hills
+  "https://images.unsplash.com/photo-1676404904527-ebc6733dac05?w=1200&auto=format&fit=crop",  // Jan — snowy forest
+  "https://images.unsplash.com/photo-1643971585868-a6a1eaa66419?w=1200&auto=format&fit=crop",  // Feb — winter trees
+  "https://images.unsplash.com/photo-1585771425927-43a8c4bf68a6?w=1200&auto=format&fit=crop",  // Mar — wildflowers
+  "https://images.unsplash.com/photo-1621242051392-5046cc3f58e7?w=1200&auto=format&fit=crop",  // Apr — sunrise sky
+  "https://images.unsplash.com/photo-1533254012848-644c18f39289?w=1200&auto=format&fit=crop",  // May — green hills
   "https://images.unsplash.com/photo-1507525428034-b723cf961d3e?w=1200&h=800&fit=crop",  // Jun — tropical beach
-  "https://images.unsplash.com/photo-1476820865390-c52aeebb9891?w=1200&h=800&fit=crop",  // Jul — summer field
-  "https://images.unsplash.com/photo-1418985991508-e47386d96a71?w=1200&h=800&fit=crop",  // Aug — mountain lake
-  "https://images.unsplash.com/photo-1505765050516-f72dcac9c60e?w=1200&h=800&fit=crop",  // Sep — autumn path
-  "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=1200&h=800&fit=crop",  // Oct — fall colors
+  "https://images.unsplash.com/photo-1692269726060-9c604e06f63b?w=1200&auto=format&fit=crop",  // Jul — summer field
+  "https://images.unsplash.com/photo-1620385019253-b051a26048ce?w=1200&auto=format&fit=crop",  // Aug — mountain lake
+  "https://images.unsplash.com/photo-1504783124764-46ceed8f15be?w=1200&h=800&fit=crop",  // Sep — autumn path
+  "https://images.unsplash.com/photo-1664650868086-0f7b9afffe3a?w=1200&auto=format&fit=crop",  // Oct — fall colors
   "https://images.unsplash.com/photo-1477601263568-180e2c6d046e?w=1200&h=800&fit=crop",  // Nov — misty morning
   "https://images.unsplash.com/photo-1504701954957-2010ec3bcec1?w=1200&h=800&fit=crop",  // Dec — frosty scene
 ];
