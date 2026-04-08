@@ -4,7 +4,7 @@ import { useState, useEffect, useRef } from "react";
 const MONTH_IMAGES = [
   "https://images.unsplash.com/photo-1676404904527-ebc6733dac05?w=1200&auto=format&fit=crop",  // Jan — snowy forest
   "https://images.unsplash.com/photo-1643971585868-a6a1eaa66419?w=1200&auto=format&fit=crop",  // Feb — winter trees
-  "https://images.unsplash.com/photo-1585771425927-43a8c4bf68a6?w=1200&auto=format&fit=crop",  // Mar — wildflowers
+  "https://images.unsplash.com/photo-1603228254119-e6a4d095dc59?w=1200&auto=format&fit=crop",  // Mar — wildflowers
   "https://images.unsplash.com/photo-1621242051392-5046cc3f58e7?w=1200&auto=format&fit=crop",  // Apr — sunrise sky
   "https://images.unsplash.com/photo-1533254012848-644c18f39289?w=1200&auto=format&fit=crop",  // May — green hills
   "https://images.unsplash.com/photo-1507525428034-b723cf961d3e?w=1200&h=800&fit=crop",  // Jun — tropical beach
@@ -12,8 +12,8 @@ const MONTH_IMAGES = [
   "https://images.unsplash.com/photo-1620385019253-b051a26048ce?w=1200&auto=format&fit=crop",  // Aug — mountain lake
   "https://images.unsplash.com/photo-1504783124764-46ceed8f15be?w=1200&h=800&fit=crop",  // Sep — autumn path
   "https://images.unsplash.com/photo-1664650868086-0f7b9afffe3a?w=1200&auto=format&fit=crop",  // Oct — fall colors
-  "https://images.unsplash.com/photo-1477601263568-180e2c6d046e?w=1200&h=800&fit=crop",  // Nov — misty morning
-  "https://images.unsplash.com/photo-1504701954957-2010ec3bcec1?w=1200&h=800&fit=crop",  // Dec — frosty scene
+  "https://images.unsplash.com/photo-1577083753695-e010191bacb5?w=1200&auto=format&fit=crop",  // Nov — misty morning
+  "https://images.unsplash.com/photo-1605571201949-b8b7ac7cadc7?w=1200&auto=format&fit=crop",  // Dec — frosty scene
 ];
 
 export function HeroImage({ currentMonth }) {
