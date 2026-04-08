@@ -1,3 +1,4 @@
+import { useEffect, useState } from "react";
 import { useCalendar } from "./hooks/useCalendar";
 import { CalendarHeader } from "./components/Calendar/CalendarHeader";
 import { CalendarGrid } from "./components/Calendar/CalendarGrid";
@@ -22,6 +23,16 @@ const MONTH_THEMES = [
 
 function App() {
   const calendar = useCalendar();
+  const [isMobile, setIsMobile] = useState(() => window.innerWidth < 900);
+
+  useEffect(() => {
+    const handleResize = () => {
+      setIsMobile(window.innerWidth < 900);
+    };
+
+    window.addEventListener("resize", handleResize);
+    return () => window.removeEventListener("resize", handleResize);
+  }, []);
 
   const flipClass = calendar.isFlipping
     ? calendar.flipDirection === 'forward'
@@ -31,11 +42,32 @@ function App() {
 
   const monthIndex = calendar.currentMonth.getMonth();
   const theme = MONTH_THEMES[monthIndex];
+  const cardWidth = isMobile ? "min(94vw, 430px)" : "560px";
+  const heroHeight = isMobile ? 220 : 320;
+  const navSize = isMobile ? 42 : 46;
+  const navIconSize = isMobile ? 18 : 20;
+  const navButtonBaseStyle = {
+    width: `${navSize}px`,
+    height: `${navSize}px`,
+    borderRadius: "50%",
+    background: "color-mix(in srgb, white 14%, transparent)",
+    backdropFilter: "blur(8px)",
+    border: `1px solid color-mix(in srgb, ${theme.accent} 30%, white 35%)`,
+    color: "rgba(255,255,255,0.88)",
+    cursor: "pointer",
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "center",
+    transition: "all 250ms cubic-bezier(0.22,1,0.36,1)",
+    boxShadow: "0 4px 12px rgba(0,0,0,0.2)",
+    flexShrink: 0,
+  };
 
   return (
     <div style={{
       height: '100vh',
-      overflow: 'hidden',
+      overflowX: 'hidden',
+      overflowY: 'auto',
       background: `
         radial-gradient(ellipse at 50% 30%, ${theme.wallA}, ${theme.wallB} 50%, ${theme.wallC} 100%)
       `,
@@ -55,7 +87,7 @@ function App() {
       {/* Nail / Pin */}
       <div style={{
         position: 'absolute',
-        top: 'calc(50% - 330px)',
+        top: isMobile ? '22px' : 'calc(50% - 330px)',
         left: '50%',
         transform: 'translateX(-50%)',
         zIndex: 20,
@@ -84,10 +116,10 @@ function App() {
       <div
         style={{
           position: "absolute",
-          top: "calc(50% - 315px)",
+          top: isMobile ? "38px" : "calc(50% - 315px)",
           left: "50%",
           transform: "translateX(-50%)",
-          width: "560px",
+          width: cardWidth,
           height: "80px",
           zIndex: 1,
           pointerEvents: "none",
@@ -97,8 +129,8 @@ function App() {
           style={{
             position: "absolute",
             top: "0px",
-            left: "280px",
-            width: "155px",
+            left: "50%",
+            width: isMobile ? "115px" : "155px",
             height: "2px",
             borderRadius: "2px",
             transformOrigin: "left center",
@@ -111,8 +143,8 @@ function App() {
           style={{
             position: "absolute",
             top: "0px",
-            right: "280px",
-            width: "155px",
+            right: "50%",
+            width: isMobile ? "115px" : "155px",
             height: "2px",
             borderRadius: "2px",
             transformOrigin: "right center",
@@ -129,46 +161,38 @@ function App() {
         zIndex: 1,
         display: 'flex',
         alignItems: 'center',
-        gap: '16px'
+        flexDirection: isMobile ? "column" : "row",
+        gap: isMobile ? '10px' : '16px',
+        padding: isMobile ? "58px 10px 14px 10px" : 0,
       }}>
-        {/* Left nav arrow */}
-        <button
-          onClick={calendar.goToPrevMonth}
-          style={{
-            width: '46px', height: '46px', borderRadius: '50%',
-            background: 'color-mix(in srgb, white 14%, transparent)',
-            backdropFilter: 'blur(8px)',
-            border: `1px solid color-mix(in srgb, ${theme.accent} 30%, white 35%)`,
-            color: 'rgba(255,255,255,0.88)',
-            cursor: 'pointer',
-            display: 'flex', alignItems: 'center', justifyContent: 'center',
-            transition: 'all 250ms cubic-bezier(0.22,1,0.36,1)',
-            boxShadow: '0 4px 12px rgba(0,0,0,0.2)',
-            flexShrink: 0
-          }}
-          onMouseEnter={(e) => {
-            e.currentTarget.style.background = `color-mix(in srgb, ${theme.accent} 45%, white 25%)`;
-            e.currentTarget.style.transform = 'scale(1.1)';
-            e.currentTarget.style.color = 'white';
-          }}
-          onMouseLeave={(e) => {
-            e.currentTarget.style.background = 'color-mix(in srgb, white 14%, transparent)';
-            e.currentTarget.style.transform = 'scale(1)';
-            e.currentTarget.style.color = 'rgba(255,255,255,0.88)';
-          }}
-          aria-label="Previous month"
-        >
-          <svg width="20" height="20" fill="none" stroke="currentColor" viewBox="0 0 24 24" style={{ pointerEvents: 'none' }}>
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M15 19l-7-7 7-7" />
-          </svg>
-        </button>
+        {!isMobile && (
+          <button
+            onClick={calendar.goToPrevMonth}
+            style={navButtonBaseStyle}
+            onMouseEnter={(e) => {
+              e.currentTarget.style.background = `color-mix(in srgb, ${theme.accent} 45%, white 25%)`;
+              e.currentTarget.style.transform = 'scale(1.1)';
+              e.currentTarget.style.color = 'white';
+            }}
+            onMouseLeave={(e) => {
+              e.currentTarget.style.background = 'color-mix(in srgb, white 14%, transparent)';
+              e.currentTarget.style.transform = 'scale(1)';
+              e.currentTarget.style.color = 'rgba(255,255,255,0.88)';
+            }}
+            aria-label="Previous month"
+          >
+            <svg width={navIconSize} height={navIconSize} fill="none" stroke="currentColor" viewBox="0 0 24 24" style={{ pointerEvents: 'none' }}>
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M15 19l-7-7 7-7" />
+            </svg>
+          </button>
+        )}
 
         {/* Calendar card */}
         <div className="calendar-perspective" style={{ flexShrink: 0, position: 'relative' }}>
           <div
             className={`calendar-card ${flipClass}`}
             style={{
-              width: '560px',
+              width: cardWidth,
               backgroundColor: theme.card,
               borderRadius: '6px',
               overflow: 'hidden',
@@ -193,18 +217,20 @@ function App() {
             <CalendarHeader />
 
             {/* Hero image with month/year overlay */}
-            <HeroImage currentMonth={calendar.currentMonth} />
+            <HeroImage currentMonth={calendar.currentMonth} height={heroHeight} compact={isMobile} />
 
             {/* Bottom section: Notes + Grid side by side */}
             <div style={{
               display: 'flex',
+              flexDirection: isMobile ? "column" : "row",
               flex: 1,
               borderTop: '1px solid #e8e5e0'
             }}>
               {/* Notes area */}
               <div style={{
-                width: '170px',
-                borderRight: '1px solid #e8e5e0',
+                width: isMobile ? '100%' : '170px',
+                borderRight: isMobile ? 'none' : '1px solid #e8e5e0',
+                borderBottom: isMobile ? '1px solid #e8e5e0' : 'none',
                 flexShrink: 0
               }}>
                 <NotesPanel
@@ -232,37 +258,50 @@ function App() {
           <div className={`flip-ground-shadow ${calendar.isFlipping ? 'active' : ''}`} />
         </div>
 
-        {/* Right nav arrow */}
-        <button
-          onClick={calendar.goToNextMonth}
-          style={{
-            width: '46px', height: '46px', borderRadius: '50%',
-            background: 'color-mix(in srgb, white 14%, transparent)',
-            backdropFilter: 'blur(8px)',
-            border: `1px solid color-mix(in srgb, ${theme.accent} 30%, white 35%)`,
-            color: 'rgba(255,255,255,0.88)',
-            cursor: 'pointer',
-            display: 'flex', alignItems: 'center', justifyContent: 'center',
-            transition: 'all 250ms cubic-bezier(0.22,1,0.36,1)',
-            boxShadow: '0 4px 12px rgba(0,0,0,0.2)',
-            flexShrink: 0
-          }}
-          onMouseEnter={(e) => {
-            e.currentTarget.style.background = `color-mix(in srgb, ${theme.accent} 45%, white 25%)`;
-            e.currentTarget.style.transform = 'scale(1.1)';
-            e.currentTarget.style.color = 'white';
-          }}
-          onMouseLeave={(e) => {
-            e.currentTarget.style.background = 'color-mix(in srgb, white 14%, transparent)';
-            e.currentTarget.style.transform = 'scale(1)';
-            e.currentTarget.style.color = 'rgba(255,255,255,0.88)';
-          }}
-          aria-label="Next month"
-        >
-          <svg width="20" height="20" fill="none" stroke="currentColor" viewBox="0 0 24 24" style={{ pointerEvents: 'none' }}>
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M9 5l7 7-7 7" />
-          </svg>
-        </button>
+        {!isMobile && (
+          <button
+            onClick={calendar.goToNextMonth}
+            style={navButtonBaseStyle}
+            onMouseEnter={(e) => {
+              e.currentTarget.style.background = `color-mix(in srgb, ${theme.accent} 45%, white 25%)`;
+              e.currentTarget.style.transform = 'scale(1.1)';
+              e.currentTarget.style.color = 'white';
+            }}
+            onMouseLeave={(e) => {
+              e.currentTarget.style.background = 'color-mix(in srgb, white 14%, transparent)';
+              e.currentTarget.style.transform = 'scale(1)';
+              e.currentTarget.style.color = 'rgba(255,255,255,0.88)';
+            }}
+            aria-label="Next month"
+          >
+            <svg width={navIconSize} height={navIconSize} fill="none" stroke="currentColor" viewBox="0 0 24 24" style={{ pointerEvents: 'none' }}>
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M9 5l7 7-7 7" />
+            </svg>
+          </button>
+        )}
+
+        {isMobile && (
+          <div style={{ display: "flex", gap: "12px", marginTop: "2px" }}>
+            <button
+              onClick={calendar.goToPrevMonth}
+              style={navButtonBaseStyle}
+              aria-label="Previous month"
+            >
+              <svg width={navIconSize} height={navIconSize} fill="none" stroke="currentColor" viewBox="0 0 24 24" style={{ pointerEvents: 'none' }}>
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M15 19l-7-7 7-7" />
+              </svg>
+            </button>
+            <button
+              onClick={calendar.goToNextMonth}
+              style={navButtonBaseStyle}
+              aria-label="Next month"
+            >
+              <svg width={navIconSize} height={navIconSize} fill="none" stroke="currentColor" viewBox="0 0 24 24" style={{ pointerEvents: 'none' }}>
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M9 5l7 7-7 7" />
+              </svg>
+            </button>
+          </div>
+        )}
       </div>
 
       {/* Month dots indicator */}
@@ -271,7 +310,7 @@ function App() {
         bottom: '14px',
         left: '50%',
         transform: 'translateX(-50%)',
-        display: 'flex',
+        display: isMobile ? 'none' : 'flex',
         gap: '6px',
         zIndex: 10
       }}>

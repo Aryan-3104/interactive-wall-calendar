@@ -16,7 +16,7 @@ const MONTH_IMAGES = [
   "https://images.unsplash.com/photo-1605571201949-b8b7ac7cadc7?w=1200&auto=format&fit=crop",  // Dec — frosty scene
 ];
 
-export function HeroImage({ currentMonth }) {
+export function HeroImage({ currentMonth, height = 320, compact = false }) {
   const monthIndex = currentMonth.getMonth();
   const imageUrl = MONTH_IMAGES[monthIndex];
   const year = currentMonth.getFullYear();
@@ -44,7 +44,7 @@ export function HeroImage({ currentMonth }) {
     <div style={{
       position: 'relative',
       width: '100%',
-      height: '320px',
+      height: `${height}px`,
       overflow: 'hidden',
       backgroundColor: '#333'
     }}>
@@ -81,11 +81,11 @@ export function HeroImage({ currentMonth }) {
       {/* Year + Month overlay — bottom-right */}
       <div style={{
         position: 'absolute',
-        bottom: '16px', right: '20px',
+        bottom: compact ? '12px' : '16px', right: compact ? '14px' : '20px',
         zIndex: 10, textAlign: 'right'
       }}>
         <div style={{
-          fontSize: '16px', fontWeight: '500',
+          fontSize: compact ? '13px' : '16px', fontWeight: '500',
           color: 'rgba(255,255,255,0.85)',
           letterSpacing: '0.15em',
           fontFamily: 'var(--font-body)',
@@ -94,7 +94,7 @@ export function HeroImage({ currentMonth }) {
           {year}
         </div>
         <div style={{
-          fontSize: '32px', fontWeight: '800',
+          fontSize: compact ? '24px' : '32px', fontWeight: '800',
           fontFamily: 'var(--font-display)',
           color: 'white',
           letterSpacing: '0.06em',
