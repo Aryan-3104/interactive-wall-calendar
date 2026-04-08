@@ -105,7 +105,7 @@ function App() {
         </button>
 
         {/* Calendar card */}
-        <div className="calendar-perspective" style={{ flexShrink: 0 }}>
+        <div className="calendar-perspective" style={{ flexShrink: 0, position: 'relative' }}>
           <div
             className={`calendar-card ${flipClass}`}
             style={{
@@ -118,6 +118,8 @@ function App() {
               flexDirection: 'column'
             }}
           >
+            {/* Paper shadow overlay — darkens page surface during flip */}
+            <div className="paper-shadow-overlay" />
             {/* Spiral binding */}
             <CalendarHeader />
 
@@ -153,6 +155,9 @@ function App() {
               </div>
             </div>
           </div>
+
+          {/* Ground shadow that spreads during flip */}
+          <div className={`flip-ground-shadow ${calendar.isFlipping ? 'active' : ''}`} />
         </div>
 
         {/* Right nav arrow */}
