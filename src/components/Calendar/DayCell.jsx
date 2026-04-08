@@ -3,9 +3,12 @@ export function DayCell({
   isCurrentMonth,
   isToday,
   isSelected,
+  hasDateNote,
   columnIndex,
   dayIndex,
   onDayClick,
+  onDayHover,
+  onDayHoverLeave,
 }) {
   const dayNum = date.getDate();
   const isSaturday = columnIndex === 5;
@@ -63,12 +66,18 @@ export function DayCell({
           e.currentTarget.style.backgroundColor = '#f0f0f0';
           e.currentTarget.style.transform = 'scale(1.15)';
         }
+        if (isCurrentMonth && onDayHover) {
+          onDayHover(date, e.currentTarget);
+        }
       }}
       onMouseLeave={(e) => {
         if (!isHighlighted) {
           e.currentTarget.style.backgroundColor = 'transparent';
         }
         e.currentTarget.style.transform = 'scale(1)';
+        if (isCurrentMonth && onDayHoverLeave) {
+          onDayHoverLeave();
+        }
       }}
       onMouseDown={(e) => { if (isCurrentMonth) e.currentTarget.style.transform = 'scale(0.9)'; }}
       onMouseUp={(e) => { e.currentTarget.style.transform = 'scale(1)'; }}
@@ -76,6 +85,21 @@ export function DayCell({
       title={date.toDateString()}
     >
       {dayNum}
+      {isCurrentMonth && hasDateNote && (
+        <span
+          style={{
+            position: "absolute",
+            bottom: "3px",
+            right: "4px",
+            width: "5px",
+            height: "5px",
+            borderRadius: "50%",
+            background: isHighlighted ? "rgba(255,255,255,0.95)" : "#5c9d69",
+            boxShadow: "0 0 0 1px rgba(255,255,255,0.85)",
+            pointerEvents: "none",
+          }}
+        />
+      )}
     </button>
   );
 }

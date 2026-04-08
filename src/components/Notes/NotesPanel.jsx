@@ -1,24 +1,16 @@
 import { useState } from "react";
-import { formatDateKey } from "../../utils/dateHelpers";
+import { formatYearMonth } from "../../utils/dateHelpers";
 
-export function NotesPanel({ selectedDate }) {
+export function NotesPanel({ currentMonth }) {
   const [saveStatus, setSaveStatus] = useState("");
-  const hasSelectedDate = Boolean(selectedDate);
-  const storageKey = hasSelectedDate ? `notes-${formatDateKey(selectedDate)}` : null;
+  const monthName = currentMonth.toLocaleString("default", { month: "long" }).toUpperCase();
+  const storageKey = `month-notes-${formatYearMonth(currentMonth)}`;
   const [notes, setNotes] = useState(() => (
-    storageKey ? localStorage.getItem(storageKey) || "" : ""
+    localStorage.getItem(storageKey) || ""
   ));
-  const headerLabel = hasSelectedDate
-    ? selectedDate.toLocaleDateString("default", {
-      month: "short",
-      day: "numeric",
-      year: "numeric",
-    }).toUpperCase()
-    : "SELECT A DATE";
+  const headerLabel = monthName;
 
   const handleNotesChange = (e) => {
-    if (!storageKey) return;
-
     const newNotes = e.target.value;
     setNotes(newNotes);
     localStorage.setItem(storageKey, newNotes);
@@ -72,8 +64,7 @@ export function NotesPanel({ selectedDate }) {
       <textarea
         value={notes}
         onChange={handleNotesChange}
-        placeholder={hasSelectedDate ? "Notes..." : "Click a date to add notes..."}
-        disabled={!hasSelectedDate}
+        placeholder="Monthly notes..."
         style={{
           flex: 1,
           width: '100%',
@@ -98,8 +89,8 @@ export function NotesPanel({ selectedDate }) {
           backgroundSize: "100% 22px",
           lineHeight: "22px",
           backgroundAttachment: "local",
-          opacity: hasSelectedDate ? 1 : 0.6,
-          cursor: hasSelectedDate ? "text" : "not-allowed"
+          opacity: 1,
+          cursor: "text"
         }}
       />
     </div>

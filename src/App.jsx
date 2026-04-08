@@ -208,8 +208,8 @@ function App() {
                 flexShrink: 0
               }}>
                 <NotesPanel
-                  key={calendar.selectedDate ? calendar.selectedDate.toISOString() : "no-date"}
-                  selectedDate={calendar.selectedDate}
+                  key={calendar.currentMonth.toISOString()}
+                  currentMonth={calendar.currentMonth}
                 />
               </div>
 
