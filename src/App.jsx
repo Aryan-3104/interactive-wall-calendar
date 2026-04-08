@@ -219,7 +219,9 @@ function App() {
                   calendarDays={calendar.calendarDays}
                   isCurrentMonth={calendar.isCurrentMonth}
                   isToday={calendar.isToday}
-                  isSelected={calendar.isSelected}
+                  isRangeStart={calendar.isRangeStart}
+                  isRangeEnd={calendar.isRangeEnd}
+                  isInRange={calendar.isInRange}
                   onDayClick={calendar.handleDayClick}
                 />
               </div>

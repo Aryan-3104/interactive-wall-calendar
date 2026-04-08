@@ -8,7 +8,9 @@ export function CalendarGrid({
   calendarDays,
   isCurrentMonth,
   isToday,
-  isSelected,
+  isRangeStart,
+  isRangeEnd,
+  isInRange,
   onDayClick,
 }) {
   const containerRef = useRef(null);
@@ -122,7 +124,9 @@ export function CalendarGrid({
             date={date}
             isCurrentMonth={isCurrentMonth(date)}
             isToday={isToday(date)}
-            isSelected={isSelected(date)}
+            isRangeStart={isRangeStart(date)}
+            isRangeEnd={isRangeEnd(date)}
+            isInRange={isInRange(date)}
             hasDateNote={hasDateNote(date)}
             columnIndex={index % 7}
             dayIndex={index}

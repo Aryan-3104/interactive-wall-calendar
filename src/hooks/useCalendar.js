@@ -3,10 +3,12 @@ import {
   getCalendarDays,
   isToday,
   isInCurrentMonth,
+  isInRange,
   isSameDateDay,
   normalizeDateToDay,
   getNextMonth,
   getPrevMonth,
+  isBefore,
 } from "../utils/dateHelpers";
 
 const FLIP_DURATION = 650; // match --flip-duration in CSS
@@ -15,7 +17,8 @@ export function useCalendar(initialDate = new Date()) {
   const [currentMonth, setCurrentMonth] = useState(
     new Date(initialDate.getFullYear(), initialDate.getMonth(), 1)
   );
-  const [selectedDate, setSelectedDate] = useState(null);
+  const [rangeStart, setRangeStart] = useState(null);
+  const [rangeEnd, setRangeEnd] = useState(null);
 
   // Page-turn animation state
   const [flipDirection, setFlipDirection] = useState(null); // 'forward' | 'backward' | null
@@ -24,8 +27,28 @@ export function useCalendar(initialDate = new Date()) {
 
   const handleDayClick = useCallback((date) => {
     const normalized = normalizeDateToDay(date);
-    setSelectedDate(normalized);
-  }, []);
+
+    // If both start and end are selected, reset and start new selection
+    if (rangeStart && rangeEnd) {
+      setRangeStart(normalized);
+      setRangeEnd(null);
+      return;
+    }
+
+    // If no range selected yet, set start
+    if (!rangeStart) {
+      setRangeStart(normalized);
+      return;
+    }
+
+    // Swap if second click is before first click
+    if (isBefore(normalized, rangeStart)) {
+      setRangeEnd(rangeStart);
+      setRangeStart(normalized);
+    } else {
+      setRangeEnd(normalized);
+    }
+  }, [rangeStart, rangeEnd]);
 
   const goToNextMonth = useCallback(() => {
     if (isFlipping) return; // prevent double-flip
@@ -59,11 +82,25 @@ export function useCalendar(initialDate = new Date()) {
     }, FLIP_DURATION);
   }, [isFlipping]);
 
-  const isSelected = useCallback(
+  const isRangeStart = useCallback(
     (date) => {
-      return selectedDate ? isSameDateDay(date, selectedDate) : false;
+      return rangeStart ? isSameDateDay(date, rangeStart) : false;
     },
-    [selectedDate]
+    [rangeStart]
+  );
+
+  const isRangeEnd = useCallback(
+    (date) => {
+      return rangeEnd ? isSameDateDay(date, rangeEnd) : false;
+    },
+    [rangeEnd]
+  );
+
+  const isInSelectedRange = useCallback(
+    (date) => {
+      return rangeStart && rangeEnd ? isInRange(date, rangeStart, rangeEnd) : false;
+    },
+    [rangeStart, rangeEnd]
   );
 
   const isTodayDate = useCallback((date) => {
@@ -79,12 +116,15 @@ export function useCalendar(initialDate = new Date()) {
 
   return {
     currentMonth,
-    selectedDate,
+    rangeStart,
+    rangeEnd,
     calendarDays: getCalendarDays(currentMonth),
     handleDayClick,
     goToNextMonth,
     goToPrevMonth,
-    isSelected,
+    isRangeStart,
+    isRangeEnd,
+    isInRange: isInSelectedRange,
     isToday: isTodayDate,
     isCurrentMonth,
     // Page-turn animation state
