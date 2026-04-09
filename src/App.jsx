@@ -248,6 +248,7 @@ function App() {
                   isRangeStart={calendar.isRangeStart}
                   isRangeEnd={calendar.isRangeEnd}
                   isInRange={calendar.isInRange}
+                  isFlipping={calendar.isFlipping}
                   onDayClick={calendar.handleDayClick}
                 />
               </div>

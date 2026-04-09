@@ -5,6 +5,7 @@ export function DayCell({
   isRangeStart,
   isRangeEnd,
   isInRange,
+  isFlipping,
   hasDateNote,
   columnIndex,
   dayIndex,
@@ -41,7 +42,7 @@ export function DayCell({
     <button
       onClick={() => onDayClick(date)}
       disabled={!isCurrentMonth}
-      className={`day-cell-enter ${isToday && isCurrentMonth ? 'day-today' : ''}`}
+      className={`${!isFlipping ? 'day-cell-enter' : ''} ${isToday && isCurrentMonth ? 'day-today' : ''}`}
       style={{
         display: 'flex',
         alignItems: 'center',

@@ -11,6 +11,7 @@ export function CalendarGrid({
   isRangeStart,
   isRangeEnd,
   isInRange,
+  isFlipping,
   onDayClick,
 }) {
   const containerRef = useRef(null);
@@ -25,6 +26,18 @@ export function CalendarGrid({
   const dateStorageKey = useMemo(() => {
     return hoveredDate ? `date-notes-${formatDateKey(hoveredDate)}` : null;
   }, [hoveredDate]);
+
+  const notedDateKeys = useMemo(() => {
+    void notesVersion;
+    const keys = new Set();
+    for (const date of calendarDays) {
+      const noteKey = `date-notes-${formatDateKey(date)}`;
+      if ((localStorage.getItem(noteKey) || "").trim()) {
+        keys.add(formatDateKey(date));
+      }
+    }
+    return keys;
+  }, [calendarDays, notesVersion]);
 
   const handleDayHover = (date, targetElement) => {
     if (!containerRef.current || !targetElement) return;
@@ -70,11 +83,7 @@ export function CalendarGrid({
     setTimeout(() => setSaveStatus(""), 1200);
   };
 
-  const hasDateNote = (date) => {
-    void notesVersion;
-    const key = `date-notes-${formatDateKey(date)}`;
-    return Boolean((localStorage.getItem(key) || "").trim());
-  };
+  const hasDateNote = (date) => notedDateKeys.has(formatDateKey(date));
 
   return (
     <div ref={containerRef} style={{ padding: '8px 10px 10px 10px', position: "relative" }}>
@@ -127,6 +136,7 @@ export function CalendarGrid({
             isRangeStart={isRangeStart(date)}
             isRangeEnd={isRangeEnd(date)}
             isInRange={isInRange(date)}
+            isFlipping={isFlipping}
             hasDateNote={hasDateNote(date)}
             columnIndex={index % 7}
             dayIndex={index}

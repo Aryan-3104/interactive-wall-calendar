@@ -1,4 +1,4 @@
-import { useState, useCallback, useRef } from "react";
+import { useState, useCallback, useEffect, useMemo, useRef } from "react";
 import {
   getCalendarDays,
   isToday,
@@ -11,7 +11,7 @@ import {
   isBefore,
 } from "../utils/dateHelpers";
 
-const FLIP_DURATION = 650; // match --flip-duration in CSS
+const FLIP_DURATION = 960; // match --flip-duration in CSS
 
 export function useCalendar(initialDate = new Date()) {
   const [currentMonth, setCurrentMonth] = useState(
@@ -23,7 +23,9 @@ export function useCalendar(initialDate = new Date()) {
   // Page-turn animation state
   const [flipDirection, setFlipDirection] = useState(null); // 'forward' | 'backward' | null
   const [isFlipping, setIsFlipping] = useState(false);
-  const flipTimeoutRef = useRef(null);
+  const monthSwapTimeoutRef = useRef(null);
+  const flipResetTimeoutRef = useRef(null);
+  const calendarDays = useMemo(() => getCalendarDays(currentMonth), [currentMonth]);
 
   const handleDayClick = useCallback((date) => {
     const normalized = normalizeDateToDay(date);
@@ -56,12 +58,12 @@ export function useCalendar(initialDate = new Date()) {
     setIsFlipping(true);
 
     // Update month at the midpoint of animation (when card is edge-on)
-    flipTimeoutRef.current = setTimeout(() => {
+    monthSwapTimeoutRef.current = setTimeout(() => {
       setCurrentMonth((prev) => getNextMonth(prev));
     }, FLIP_DURATION * 0.5);
 
     // Reset flip state at the end
-    setTimeout(() => {
+    flipResetTimeoutRef.current = setTimeout(() => {
       setIsFlipping(false);
       setFlipDirection(null);
     }, FLIP_DURATION);
@@ -72,15 +74,26 @@ export function useCalendar(initialDate = new Date()) {
     setFlipDirection('backward');
     setIsFlipping(true);
 
-    flipTimeoutRef.current = setTimeout(() => {
+    monthSwapTimeoutRef.current = setTimeout(() => {
       setCurrentMonth((prev) => getPrevMonth(prev));
     }, FLIP_DURATION * 0.5);
 
-    setTimeout(() => {
+    flipResetTimeoutRef.current = setTimeout(() => {
       setIsFlipping(false);
       setFlipDirection(null);
     }, FLIP_DURATION);
   }, [isFlipping]);
+
+  useEffect(() => {
+    return () => {
+      if (monthSwapTimeoutRef.current) {
+        clearTimeout(monthSwapTimeoutRef.current);
+      }
+      if (flipResetTimeoutRef.current) {
+        clearTimeout(flipResetTimeoutRef.current);
+      }
+    };
+  }, []);
 
   const isRangeStart = useCallback(
     (date) => {
@@ -118,7 +131,7 @@ export function useCalendar(initialDate = new Date()) {
     currentMonth,
     rangeStart,
     rangeEnd,
-    calendarDays: getCalendarDays(currentMonth),
+    calendarDays,
     handleDayClick,
     goToNextMonth,
     goToPrevMonth,
